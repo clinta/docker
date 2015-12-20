@@ -1,3 +1,5 @@
+// +build !windows
+
 // Package nl has low level primitives for making Netlink calls.
 package nl
 
