@@ -184,8 +184,16 @@ func (a *RtAttr) Serialize() []byte {
 	return buf
 }
 
+type syscallNlMsghdr struct {
+	Len   uint32
+	Type  uint16
+	Flags uint16
+	Seq   uint32
+	Pid   uint32
+}
+
 type NetlinkRequest struct {
-	syscall.NlMsghdr
+	syscallNlMsghdr
 	Data []NetlinkRequestData
 }
 
@@ -279,7 +287,7 @@ done:
 // the message is serialized
 func NewNetlinkRequest(proto, flags int) *NetlinkRequest {
 	return &NetlinkRequest{
-		NlMsghdr: syscall.NlMsghdr{
+		NlMsghdr: syscallNlMsghdr{
 			Len:   uint32(syscall.SizeofNlMsghdr),
 			Type:  uint16(proto),
 			Flags: syscall.NLM_F_REQUEST | uint16(flags),
