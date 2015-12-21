@@ -180,8 +180,17 @@ func (a *RtAttr) Serialize() []byte {
 	return buf
 }
 
+// NlMsghdr is also not available on FreeBSD
+type syscallNlMsghdr struct {
+	Len   uint32
+	Type  uint16
+	Flags uint16
+	Seq   uint32
+	Pid   uint32
+}
+
 type NetlinkRequest struct {
-	syscall.NlMsghdr
+	syscallNlMsghdr
 	Data []NetlinkRequestData
 }
 
