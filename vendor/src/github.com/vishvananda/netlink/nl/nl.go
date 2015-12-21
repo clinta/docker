@@ -110,9 +110,15 @@ func NewIfInfomsgChild(parent *RtAttr, family int) *IfInfomsg {
 	return msg
 }
 
+// Explicitly define RtAttr from syscall, since it does not exist in FreeBSD
+type syscallRtAttr struct {
+	Len  uint16
+	Type uint16
+}
+
 // Extend RtAttr to handle data and children
 type RtAttr struct {
-	syscall.RtAttr
+	syscallRtAttr
 	Data     []byte
 	children []NetlinkRequestData
 }
