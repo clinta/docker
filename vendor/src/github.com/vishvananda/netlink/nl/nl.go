@@ -70,13 +70,18 @@ type NetlinkRequestData interface {
 }
 
 // IfInfomsg is related to links, but it is used for list requests as well
-type IfInfomsg struct {
+type syscallIfInfomsg struct {
 	Family     uint8
 	X__ifi_pad uint8
 	Type       uint16
 	Index      int32
 	Flags      uint32
 	Change     uint32
+}
+
+// IfInfomsg is related to links, but it is used for list requests as well
+type IfInfomsg struct {
+	syscallIfInfomsg
 }
 
 // Create an IfInfomsg with family specified
