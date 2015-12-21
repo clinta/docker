@@ -69,15 +69,25 @@ type NetlinkRequestData interface {
 	Serialize() []byte
 }
 
+// Override IfInfomsg
+type syscallIfInfomsg struct {
+	Family     uint8
+	X__ifi_pad uint8
+	Type       uint16
+	Index      int32
+	Flags      uint32
+	Change     uint32
+}
+
 // IfInfomsg is related to links, but it is used for list requests as well
 type IfInfomsg struct {
-	syscall.IfInfomsg
+	syscallIfInfomsg
 }
 
 // Create an IfInfomsg with family specified
 func NewIfInfomsg(family int) *IfInfomsg {
 	return &IfInfomsg{
-		IfInfomsg: syscall.IfInfomsg{
+		IfInfomsg: syscallIfInfomsg{
 			Family: uint8(family),
 		},
 	}
