@@ -293,9 +293,17 @@ func NewNetlinkRequest(proto, flags int) *NetlinkRequest {
 	}
 }
 
+type SockaddrNetlink struct {
+	Family uint16
+	Pad    uint16
+	Pid    uint32
+	Groups uint32
+	// contains filtered or unexported fields
+}
+
 type NetlinkSocket struct {
 	fd  int
-	lsa syscall.SockaddrNetlink
+	lsa SockaddrNetlink
 }
 
 func getNetlinkSocket(protocol int) (*NetlinkSocket, error) {
