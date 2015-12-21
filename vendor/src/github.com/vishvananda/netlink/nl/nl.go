@@ -1,4 +1,4 @@
-// +build !windows
+// build !windows
 
 // Package nl has low level primitives for making Netlink calls.
 package nl
@@ -71,20 +71,13 @@ type NetlinkRequestData interface {
 
 // IfInfomsg is related to links, but it is used for list requests as well
 type IfInfomsg struct {
-	IfInfomsg struct {
-		Family     uint8
-		X__ifi_pad uint8
-		Type       uint16
-		Index      int32
-		Flags      uint32
-		Change     uint32
-	}
+	syscall.IfInfomsg
 }
 
 // Create an IfInfomsg with family specified
 func NewIfInfomsg(family int) *IfInfomsg {
 	return &IfInfomsg{
-		IfInfomsg: IfInfomsg{
+		IfInfomsg: syscall.IfInfomsg{
 			Family: uint8(family),
 		},
 	}
@@ -112,15 +105,9 @@ func NewIfInfomsgChild(parent *RtAttr, family int) *IfInfomsg {
 	return msg
 }
 
-// Explicitly define RtAttr from syscall, since it does not exist in FreeBSD
-type syscallRtAttr struct {
-	Len  uint16
-	Type uint16
-}
-
 // Extend RtAttr to handle data and children
 type RtAttr struct {
-	syscallRtAttr
+	syscall.RtAttr
 	Data     []byte
 	children []NetlinkRequestData
 }
@@ -182,17 +169,8 @@ func (a *RtAttr) Serialize() []byte {
 	return buf
 }
 
-// NlMsghdr is also not available on FreeBSD
-type syscallNlMsghdr struct {
-	Len   uint32
-	Type  uint16
-	Flags uint16
-	Seq   uint32
-	Pid   uint32
-}
-
 type NetlinkRequest struct {
-	syscallNlMsghdr
+	syscall.NlMsghdr
 	Data []NetlinkRequestData
 }
 
@@ -295,17 +273,9 @@ func NewNetlinkRequest(proto, flags int) *NetlinkRequest {
 	}
 }
 
-type SockaddrNetlink struct {
-	Family uint16
-	Pad    uint16
-	Pid    uint32
-	Groups uint32
-	// contains filtered or unexported fields
-}
-
 type NetlinkSocket struct {
 	fd  int
-	lsa SockaddrNetlink
+	lsa syscall.SockaddrNetlink
 }
 
 func getNetlinkSocket(protocol int) (*NetlinkSocket, error) {
