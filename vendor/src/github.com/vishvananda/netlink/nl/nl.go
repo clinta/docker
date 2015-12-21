@@ -112,7 +112,8 @@ func NewIfInfomsgChild(parent *RtAttr, family int) *IfInfomsg {
 
 // Extend RtAttr to handle data and children
 type RtAttr struct {
-	syscall.RtAttr
+	Len      uint16
+	Type     uint16
 	Data     []byte
 	children []NetlinkRequestData
 }
