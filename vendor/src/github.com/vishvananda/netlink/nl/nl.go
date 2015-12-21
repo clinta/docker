@@ -296,9 +296,17 @@ func NewNetlinkRequest(proto, flags int) *NetlinkRequest {
 	}
 }
 
+type syscallSockaddrNetlink struct {
+	Family uint16
+	Pad    uint16
+	Pid    uint32
+	Groups uint32
+	// contains filtered or unexported fields
+}
+
 type NetlinkSocket struct {
 	fd  int
-	lsa syscall.SockaddrNetlink
+	lsa syscallSockaddrNetlink
 }
 
 func getNetlinkSocket(protocol int) (*NetlinkSocket, error) {
@@ -374,7 +382,7 @@ func (s *NetlinkSocket) GetPid() (uint32, error) {
 		return 0, err
 	}
 	switch v := lsa.(type) {
-	case *syscall.SockaddrNetlink:
+	case *syscallSockaddrNetlink:
 		return v.Pid, nil
 	}
 	return 0, fmt.Errorf("Wrong socket type")
