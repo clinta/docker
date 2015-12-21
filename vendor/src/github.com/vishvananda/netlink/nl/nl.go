@@ -115,9 +115,14 @@ func NewIfInfomsgChild(parent *RtAttr, family int) *IfInfomsg {
 	return msg
 }
 
+type syscallRtAttr struct {
+	Len  uint16
+	Type uint16
+}
+
 // Extend RtAttr to handle data and children
 type RtAttr struct {
-	syscall.RtAttr
+	syscallRtAttr
 	Data     []byte
 	children []NetlinkRequestData
 }
@@ -125,7 +130,7 @@ type RtAttr struct {
 // Create a new Extended RtAttr object
 func NewRtAttr(attrType int, data []byte) *RtAttr {
 	return &RtAttr{
-		RtAttr: syscall.RtAttr{
+		RtAttr: syscallRtAttr{
 			Type: uint16(attrType),
 		},
 		children: []NetlinkRequestData{},
@@ -421,8 +426,8 @@ func ParseRouteAttr(b []byte) ([]syscall.NetlinkRouteAttr, error) {
 	return attrs, nil
 }
 
-func netlinkRouteAttrAndValue(b []byte) (*syscall.RtAttr, []byte, int, error) {
-	a := (*syscall.RtAttr)(unsafe.Pointer(&b[0]))
+func netlinkRouteAttrAndValue(b []byte) (*syscallRtAttr, []byte, int, error) {
+	a := (*syscallRtAttr)(unsafe.Pointer(&b[0]))
 	if int(a.Len) < syscall.SizeofRtAttr || int(a.Len) > len(b) {
 		return nil, nil, 0, syscall.EINVAL
 	}
