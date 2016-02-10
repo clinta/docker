@@ -44,6 +44,7 @@ func Parse(cmd *flag.FlagSet, args []string) (*container.Config, *container.Host
 
 		flPublish           = opts.NewListOpts(nil)
 		flExpose            = opts.NewListOpts(nil)
+		flDNSDriver         = cmd.String([]string{"-dns-driver"}, "", "Optional dns driver for the container")
 		flDNS               = opts.NewListOpts(opts.ValidateIPAddress)
 		flDNSSearch         = opts.NewListOpts(opts.ValidateDNSSearch)
 		flDNSOptions        = opts.NewListOpts(nil)
@@ -391,6 +392,7 @@ func Parse(cmd *flag.FlagSet, args []string) (*container.Config, *container.Host
 		// but pre created containers can still have those nil values.
 		// See https://github.com/docker/docker/pull/17779
 		// for a more detailed explanation on why we don't want that.
+		DNSDriver:      *flDNSDriver,
 		DNS:            flDNS.GetAllOrEmpty(),
 		DNSSearch:      flDNSSearch.GetAllOrEmpty(),
 		DNSOptions:     flDNSOptions.GetAllOrEmpty(),

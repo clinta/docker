@@ -215,6 +215,7 @@ type HostConfig struct {
 	// Applicable to UNIX platforms
 	CapAdd          *strslice.StrSlice // List of kernel capabilities to add to the container
 	CapDrop         *strslice.StrSlice // List of kernel capabilities to remove from the container
+	DNSDriver       string             // Name of the dns driver used
 	DNS             []string           `json:"Dns"`        // List of DNS server to lookup
 	DNSOptions      []string           `json:"DnsOptions"` // List of DNSOption to look for
 	DNSSearch       []string           `json:"DnsSearch"`  // List of DNSSearch to look for
